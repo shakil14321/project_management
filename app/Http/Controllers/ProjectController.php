@@ -9,27 +9,32 @@ class ProjectController extends Controller
 {
     public function store(Request $request)
     {
-        // validate inputs
+        // Validate inputs
         $request->validate([
             'date' => 'required|date',
             'client' => 'required|string',
             'number' => 'required|string',
             'email' => 'required|email',
             'company_address' => 'required|string',
+            'details' => 'nullable|string',
             'project_type' => 'nullable|array',
-            'status' => 'nullable|string',
-            'proposal' => 'nullable|file|mimes:pdf',
+            'proposal.*' => 'nullable|file|mimes:pdf,doc,docx|max:20480',
             'budget' => 'nullable|numeric',
             'status' => 'nullable|string',
+            'reminder_date' => 'nullable|date',
+            'remark' => 'nullable|string',
         ]);
 
-        // handle file upload
-        $pdfPath = null;
+        // Handle file upload
+        $pdfPaths = [];
         if ($request->hasFile('proposal')) {
-            $pdfPath = $request->file('proposal')->store('proposals', 'public');
+            foreach ($request->file('proposal') as $file) {
+                $path = $file->store('proposals', 'public');
+                $pdfPaths[] = $path;
+            }
         }
 
-        // save to database
+        // Save to database
         Project::create([
             'date' => $request->date,
             'client' => $request->client,
@@ -38,17 +43,15 @@ class ProjectController extends Controller
             'company_address' => $request->company_address,
             'details' => $request->details,
             'project_type' => json_encode($request->project_type),
-            'proposal' => $pdfPath,
+            'proposal' => json_encode($pdfPaths),
             'budget' => $request->budget,
             'status' => $request->status,
+            'reminder_date' => $request->reminder_date,
+            'remark' => $request->remark,
         ]);
 
         return redirect()->route('projects.index')->with('success', 'Project saved successfully!');
     }
-
-
-    
-    
 
     public function index(Request $request)
     {
@@ -69,6 +72,17 @@ class ProjectController extends Controller
         return view('projects.index', compact('projects'));
     }
 
+    public function create()
+    {
+        return view('projects.create');
+    }
+
+    public function show($id)
+    {
+        $project = Project::findOrFail($id);
+        return view('projects.profile', compact('project'));
+    }
+
     public function edit($id)
     {
         $project = Project::findOrFail($id);
@@ -79,6 +93,7 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
 
+        // Validate inputs
         $request->validate([
             'date' => 'required|date',
             'client' => 'required|string',
@@ -87,16 +102,20 @@ class ProjectController extends Controller
             'company_address' => 'required|string',
             'details' => 'nullable|string',
             'project_type' => 'nullable|array',
-            'proposal' => 'nullable|file|mimes:pdf',
+            'proposal' => 'nullable|file|mimes:pdf,doc,docx|max:20480',
             'budget' => 'nullable|numeric',
             'status' => 'nullable|string',
+            'reminder_date' => 'nullable|date',
+            'remark' => 'nullable|string',
         ]);
 
+        // Handle new file upload (if exists)
         if ($request->hasFile('proposal')) {
             $pdfPath = $request->file('proposal')->store('proposals', 'public');
-            $project->proposal = $pdfPath;
+            $project->proposal = json_encode([$pdfPath]);
         }
 
+        // Update other fields
         $project->update([
             'date' => $request->date,
             'client' => $request->client,
@@ -104,9 +123,11 @@ class ProjectController extends Controller
             'email' => $request->email,
             'company_address' => $request->company_address,
             'details' => $request->details,
-            'project_type' => json_encode($request->input('project_type', [])),
+            'project_type' => json_encode($request->project_type),
             'budget' => $request->budget,
             'status' => $request->status,
+            'reminder_date' => $request->reminder_date,
+            'remark' => $request->remark,
         ]);
 
         return redirect()->route('projects.index')->with('success', 'Project updated!');
@@ -119,17 +140,4 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')->with('success', 'Project deleted!');
     }
-
-    public function create()
-    {
-        return view('projects.create');
-    }
-
-    public function show($id)
-    {
-        $project = Project::findOrFail($id);
-        return view('projects.profile', compact('project'));
-    }
-
-
 }

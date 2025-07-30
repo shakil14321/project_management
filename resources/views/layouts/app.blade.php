@@ -33,6 +33,8 @@
 
                     </ul>
 
+                    
+
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
@@ -48,11 +50,14 @@
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
+                            
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
+
+                                
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
@@ -60,6 +65,29 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
+
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle position-relative" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                            🔔
+                                            @if ($notifications->count())
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    {{ $notifications->count() }}
+                                                </span>
+                                            @endif
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                            @forelse ($notifications as $note)
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('projects.show', $note->id) }}">
+                                                        📌 {{ $note->client }} – Reminder: {{ \Carbon\Carbon::parse($note->reminder_date)->format('M d, Y') }}
+                                                    </a>
+                                                </li>
+                                            @empty
+                                                <li><span class="dropdown-item text-muted">No reminders</span></li>
+                                            @endforelse
+                                        </ul>
+                                    </li>
+
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf

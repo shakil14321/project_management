@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('company_address')->nullable();
             $table->text('details')->nullable();
             $table->json('project_type')->nullable();
-            $table->string('proposal')->nullable(); // PDF file path
+            $table->text('proposal')->nullable(); // PDF file path
             $table->decimal('budget', 10, 2)->nullable();
             $table->string('status')->nullable();
             $table->timestamps();

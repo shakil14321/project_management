@@ -3,7 +3,12 @@
 @section('content')
     <div class="container mt-4">
 
-        <a href="{{ route('projects.create') }}">Create</a>
+        <a href="{{ route('projects.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Create
+        </a>
+
+        
+
 
         <h2 class="mb-4">All Submitted Projects</h2>
 
@@ -32,6 +37,19 @@
             </div>
         </form>
 
+        {{-- <p><strong>Total Projects:</strong> {{ $projects->count() }}</p> --}}
+
+        @if ($projects->count())
+            <p><strong>Total Projects:</strong> {{ $projects->count() }}</p>
+            {{-- <table class="table table-bordered table-striped">
+                ...
+            </table> --}}
+        @else
+            <p>No projects found.</p>
+        @endif
+
+
+
         @if ($projects->count())
             <table class="table table-bordered table-striped">
                 <thead>
@@ -47,6 +65,7 @@
                         <th>Budget</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th>Remark</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,7 +100,7 @@
 
                             <td>
                                 @if ($project->proposal)
-                                    <a href="{{ asset('storage/' . $project->proposal) }}" target="_blank">View PDF</a>
+                                    <a href="{{ asset('storage/' . $project->proposal) }}" target="_blank">View file</a>
                                 @else
                                     N/A
                                 @endif
@@ -97,6 +116,7 @@
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
                            </td>
+                            <td>{{ $project->remark ?? 'N/A' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

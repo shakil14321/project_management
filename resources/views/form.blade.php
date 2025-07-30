@@ -46,9 +46,10 @@
             </div>
 
             <div class="mb-3 w-25">
-                <label>Upload Proposal (PDF)</label>
-                <input type="file" name="proposal" class="form-control" accept="application/pdf">
+                <label>Upload Proposal (PDF/DOC/DOCX)</label>
+                <input type="file" name="proposal[]" class="form-control" accept=".pdf,.doc,.docx" multiple>
             </div>
+
 
             <div class="mb-3 w-25">
                 <label>Project Budget (BDT)</label>

@@ -7,7 +7,7 @@ use App\Http\Controllers\ProjectController;
 
 
 Auth::routes([
-    'register' => true,
+    'register' => false,
 ]);
 
 
@@ -50,6 +50,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::post('/store', [ProjectController::class, 'store'])->name(name: 'form.submit');
     Route::get('/projects/{id}/profile', [ProjectController::class, 'show'])->name('projects.profile');
-    Route::put('/projects/{id}/update', [ProjectController::class, 'update'])->name('projects.update');
+    Route::put('/projects/{id}/update', [ProjectController::class, 'update'])->name('projects.show');
 
 });
