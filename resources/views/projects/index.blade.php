@@ -1,0 +1,108 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="container mt-4">
+
+        <a href="{{ route('projects.create') }}">Create</a>
+
+        <h2 class="mb-4">All Submitted Projects</h2>
+
+        <form method="GET" action="{{ route('projects.index') }}" class="row mb-4 g-3">
+            <div class="col-md-3">
+                <label>Date From</label>
+                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+            </div>
+            <div class="col-md-3">
+                <label>Date To</label>
+                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+            </div>
+            <div class="col-md-3">
+                <label>Status</label>
+                <select name="status" class="form-select">
+                    <option value="">-- All --</option>
+                    <option value="processing" {{ request('status') == 'processing' ? 'selected' : '' }}>processing
+                    </option>
+                    <option value="pipeline" {{ request('status') == 'pipeline' ? 'selected' : '' }}>pipeline</option>
+                    <option value="confrom" {{ request('status') == 'confrom' ? 'selected' : '' }}>confrom</option>
+                    <option value="cancel" {{ request('status') == 'cancel' ? 'selected' : '' }}>cancel</option>
+                </select>
+            </div>
+            <div class="col-md-3 align-self-end">
+                <button class="btn btn-primary w-100" type="submit">Filter</button>
+            </div>
+        </form>
+
+        @if ($projects->count())
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client</th>
+                        <th>Number</th>
+                        <th>Email</th>
+                        <th>Company Address</th>
+                        <th>Details</th>
+                        <th>Project Type</th>
+                        <th>Proposal</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($projects as $project)
+                        <tr>
+                            <td>{{ $project->date }}</td>
+                            <td>{{ $project->client }}</td>
+                            <td>
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $project->number) }}" target="_blank">
+                                    {{ $project->number }}
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ $project->email }}" target="_blank">
+                                    {{ $project->email }}
+                                </a>
+                            </td>
+
+                            <td>{{ $project->company_address }}</td>
+
+                            <td>{{ $project->details }}</td>
+                            <td>
+                                @if ($project->project_type)
+                                    @foreach (json_decode($project->project_type) as $type)
+                                        <span class="badge bg-primary">{{ $type }}</span>
+                                    @endforeach
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+
+                            <td>
+                                @if ($project->proposal)
+                                    <a href="{{ asset('storage/' . $project->proposal) }}" target="_blank">View PDF</a>
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            <td>৳{{ number_format($project->budget, 2) }}</td>
+                            <td>{{ $project->status }}</td>
+                           <td>
+                                <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('projects.profile', $project->id) }}" class="btn btn-info btn-sm">Profile</a>
+                                <form action="{{ route('projects.destroy', $project->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                           </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <p>No projects found.</p>
+        @endif
+    </div>
+@endsection
