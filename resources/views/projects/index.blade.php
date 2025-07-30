@@ -63,9 +63,9 @@
                         <th>Project Type</th>
                         <th>Proposal</th>
                         <th>Budget</th>
-                        <th>Status</th>
+                        {{-- <th>Status</th>
                         <th>Action</th>
-                        <th>Remark</th>
+                        <th>Remark</th> --}}
                     </tr>
                 </thead>
                 <tbody>
