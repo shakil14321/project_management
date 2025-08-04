@@ -39,6 +39,10 @@
                 <input type="date" name="reminder_date" class="form-control" value="{{ old('reminder_date', $project->reminder_date ?? '') }}">
             </div>
 
+            <div class="mb-3 w-25 ms-2">
+                <label>Project Name</label>
+                <input type="text" name="Project_Name" class="form-control">
+            </div>
             
             <div class="mb-3 w-25 ms-2">
                 <label>Client</label>
@@ -53,6 +57,11 @@
             <div class="mb-3 w-25 ms-2">
                 <label>Email</label>
                 <input type="email" name="email" class="form-control">
+            </div>
+
+            <div class="mb-3 w-25 ms-2">
+                <label>Client Requirements</label>
+                <input type="text" name="Client_requirements" class="form-control">
             </div>
 
             <div class="mb-3 w-25 ms-2">

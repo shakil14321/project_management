@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->string('Project_Name');
             $table->string('client');
             $table->string('number');
             $table->string('email');
+            $table->string('Client_requirements')->nullable();
             $table->string('company_address')->nullable();
             $table->text('details')->nullable();
             $table->json('project_type')->nullable();

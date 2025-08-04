@@ -3,14 +3,11 @@
 @section('content')
     <div class="container mt-4">
 
+        <h2 class="mb-4">All Submitted Projects</h2>
+        
         <a href="{{ route('projects.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Create
         </a>
-
-        
-
-
-        <h2 class="mb-4">All Submitted Projects</h2>
 
         <form method="GET" action="{{ route('projects.index') }}" class="row mb-4 g-3">
             <div class="col-md-3">
