@@ -17,27 +17,6 @@ Route::get('/', function () {
     return view('form');
 });
 
-// Route::post('/whatsapp', function (Request $request) {
-//     $number = preg_replace('/[^0-9]/', '', $request->number);
-//     return redirect("https://wa.me/{$number}");
-// })->name('whatsapp.redirect');
-
-// Route::post('/email', function () {
-//     return redirect("https://mail.google.com");
-// })->name('email.redirect');
-
-// // Optional: Handle full form submit
-// Route::post('/submit-full-form', function (Request $request) {
-//     if ($request->hasFile('proposal')) {
-//         $pdf = $request->file('proposal');
-//         $pdf->storeAs('proposals', $pdf->getClientOriginalName(), 'public');
-//     }
-
-//     return back()->with('success', 'Form submitted successfully!');
-// })->name('form.submit');
-
-//Route::post('/', [ProjectController::class, 'store'])->name(name: 'form.submit');
-
 
 // Grouped project routes with auth middleware
 Route::middleware('auth')->group(function () {
