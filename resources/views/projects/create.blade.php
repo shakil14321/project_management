@@ -136,6 +136,16 @@
         </div>
 
         <div class="mb-3 w-50">
+            <label class="form-label">Reminder Text</label>
+            <input type="text" name="reminder_text" class="form-control" value="{{ old('reminder_text') }}">
+
+            <label class="form-label mt-2">Reminder Link (optional)</label>
+            <input type="url" name="reminder_link" class="form-control" value="{{ old('reminder_link') }}">
+        </div>
+
+
+
+        <div class="mb-3 w-50">
             <label>Remark</label>
             <textarea name="remark" class="form-control" rows="3">{{ old('remark', $project->remark ?? '') }}</textarea>
         </div>

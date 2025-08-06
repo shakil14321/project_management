@@ -78,6 +78,7 @@
                         <th>Status</th>
                         <th>Action</th>
                         <th>Remark</th>
+                        <th>Reminder</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -144,6 +145,28 @@
                                 </form>
                            </td>
                             <td>{{ $project->remark ?? 'N/A' }}</td>
+                            <td>
+                                {{ $project->reminder_date ?? 'No Reminder' }}
+                                    @php
+                                        $reminder = $reminders->firstWhere('project_id', $project->id);
+                                    @endphp
+
+                                    @if ($reminder)
+                                        <span title="{{ $reminder->text }}">
+                                            {{ $reminder->reminder_date }}
+                                        </span>
+
+                                        <form method="POST" action="{{ route('reminders.toggle', $reminder->id) }}" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm {{ $reminder->is_active ? 'btn-success' : 'btn-secondary' }}">
+                                                {{ $reminder->is_active ? 'ON' : 'OFF' }}
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-muted">No Reminder</span>
+                                    @endif
+                            </td>
+
                         </tr>
                     @endforeach
                 </tbody>

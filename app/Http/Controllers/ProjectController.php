@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Reminder;
 
 class ProjectController extends Controller
 {
@@ -25,6 +26,8 @@ class ProjectController extends Controller
             'status' => 'nullable|string',
             'reminder_date' => 'nullable|date',
             'remark' => 'nullable|string',
+            'reminder_text' => 'nullable|string',
+            'reminder_link' => 'nullable|url',
         ]);
 
         $pdfPaths = [];
@@ -33,10 +36,19 @@ class ProjectController extends Controller
                 $pdfPaths[] = $file->store('proposals', 'public');
             }
         }
+        
 
         $filePath = null;
         if ($request->hasFile('client_requirement_file')) {
             $filePath = $request->file('client_requirement_file')->store('client_requirements', 'public');
+        }
+
+        if ($request->filled('reminder_text')) {
+            Reminder::create([
+                'text' => $request->reminder_text,
+                'link' => $request->reminder_link,
+                'is_active' => true,
+            ]);
         }
 
         Project::create([
@@ -86,8 +98,9 @@ class ProjectController extends Controller
 
         // $projects = $query->latest()->get();
         $projects = $query->orderBy('date', 'desc')->get();
+        $reminders = Reminder::all();
 
-        return view('projects.index', compact('projects'));
+        return view('projects.index', compact('projects', 'reminders'));
     }
 
     public function create()
@@ -174,4 +187,15 @@ class ProjectController extends Controller
 
         return redirect()->route('projects.index')->with('success', 'Project deleted!');
     }
+
+    public function toggle($id)
+    {
+        $reminder = Reminder::findOrFail($id);
+        $reminder->is_active = !$reminder->is_active;
+        $reminder->save();
+
+        return response()->json(['status' => 'success', 'is_active' => $reminder->is_active]);
+    }
+
+
 }

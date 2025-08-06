@@ -33,5 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/store', [ProjectController::class, 'store'])->name(name: 'form.submit');
     Route::get('/projects/{id}/profile', [ProjectController::class, 'show'])->name('projects.profile');
     Route::put('/projects/{id}/update', [ProjectController::class, 'update'])->name('projects.show');
+    Route::post('/reminders/{id}/toggle', [ProjectController::class, 'toggle'])->name('reminders.toggle');
+    Route::patch('/reminders/{id}/toggle', [App\Http\Controllers\ReminderController::class, 'toggle'])->name('reminders.toggle');
 
 });
