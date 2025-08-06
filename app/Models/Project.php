@@ -11,9 +11,12 @@ class Project extends Model
 {
     protected $fillable = [
         'date',
+        'Project_Name',
         'client',
         'number',
         'email',
+        'client_requirement_text',
+        'client_requirement_file',
         'company_address',
         'details',
         'project_type',

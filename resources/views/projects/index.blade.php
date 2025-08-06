@@ -3,7 +3,20 @@
 @section('content')
     <div class="container mt-4">
 
-        <h2 class="mb-4">All Submitted Projects</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>All Submitted Projects</h2>
+
+        <form method="GET" action="{{ route('projects.index') }}" class="d-flex" style="gap: 10px;">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control" 
+                    placeholder="Search Name, Email, Number" 
+                    value="{{ request('search') }}"
+                >
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
         
         <a href="{{ route('projects.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Create
@@ -52,9 +65,11 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Client</th>
+                        <th>Project Name</th>
+                        <th>Client Name</th>
                         <th>Number</th>
                         <th>Email</th>
+                        <th>client_requirement</th>
                         <th>Company Address</th>
                         <th>Details</th>
                         <th>Project Type</th>
@@ -69,6 +84,7 @@
                     @foreach ($projects as $project)
                         <tr>
                             <td>{{ $project->date }}</td>
+                            <td>{{ $project->Project_Name }}</td>
                             <td>{{ $project->client }}</td>
                             <td>
                                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $project->number) }}" target="_blank">
@@ -81,6 +97,20 @@
                                     {{ $project->email }}
                                 </a>
                             </td>
+                            <td>
+                                @if ($project->client_requirement_text)
+                                    {{ $project->client_requirement_text }}
+                                @else
+                                    N/A
+                                @endif
+                                <br>
+                                @if ($project->client_requirement_file)
+                                    <a href="{{ asset('storage/' . $project->client_requirement_file) }}" target="_blank">
+                                        View File
+                                    </a>
+                                @else
+                                    N/A
+                                @endif
 
                             <td>{{ $project->company_address }}</td>
 

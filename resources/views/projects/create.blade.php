@@ -27,129 +27,118 @@
     <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-       <div class="d-flex ">
-        
+        <div class="d-flex flex-wrap gap-3">
             <div class="mb-3 w-25">
-            <label>Date</label>
-            <input type="date" name="date" value="{{ date('Y-m-d') }}" class="form-control">
+                <label>Date</label>
+                <input type="date" name="date" value="{{ old('date', date('Y-m-d')) }}" class="form-control">
             </div>
 
-            <div class="mb-3 w-25 ms-2">
+            <div class="mb-3 w-25">
                 <label>Reminder Date</label>
                 <input type="date" name="reminder_date" class="form-control" value="{{ old('reminder_date', $project->reminder_date ?? '') }}">
             </div>
 
-            <div class="mb-3 w-25 ms-2">
+            <div class="mb-3 w-25">
                 <label>Project Name</label>
-                <input type="text" name="Project_Name" class="form-control">
-            </div>
-            
-            <div class="mb-3 w-25 ms-2">
-                <label>Client</label>
-                <input type="text" name="client" class="form-control">
+                <input type="text" name="Project_Name" value="{{ old('Project_Name') }}" class="form-control">
             </div>
 
-            <div class="mb-3 w-25 ms-2">
+            <div class="mb-3 w-25">
+                <label>Client name</label>
+                <input type="text" name="client" value="{{ old('client') }}" class="form-control">
+            </div>
+
+            <div class="mb-3 w-25">
                 <label>Number</label>
-                <input type="text" name="number" class="form-control">
+                <input type="text" name="number" value="{{ old('number') }}" class="form-control">
             </div>
 
-            <div class="mb-3 w-25 ms-2">
+            <div class="mb-3 w-25">
                 <label>Email</label>
-                <input type="email" name="email" class="form-control">
+                <input type="email" name="email" value="{{ old('email') }}" class="form-control">
             </div>
 
-            <div class="mb-3 w-25 ms-2">
-                <label>Client Requirements</label>
-                <input type="text" name="Client_requirements" class="form-control">
+            <div class="mb-3 w-50">
+                <label class="form-label">Client Requirements</label>
+
+                <textarea name="client_requirement_text" class="form-control mb-2" rows="4" required>{{ old('client_requirement_text', $project->client_requirement_text ?? '') }}</textarea>
+
+                <input type="file" name="client_requirement_file" class="form-control">
+
+                @if(!empty($project->client_requirement_file))
+                    <small class="text-muted mt-1 d-block">
+                        Current File: <a href="{{ asset('storage/' . $project->client_requirement_file) }}" target="_blank">View</a>
+                    </small>
+                @endif
             </div>
 
-            <div class="mb-3 w-25 ms-2">
+
+            <div class="mb-3 w-50">
                 <label>Company Address</label>
-                <input type="text" name="company_address" class="form-control">
+                <input type="text" name="company_address" value="{{ old('company_address') }}" class="form-control">
             </div>
+        </div>
 
-       </div>
+        <div class="mb-3 w-50">
+            <label>Project Details</label>
+            <textarea name="details" class="form-control" rows="3">{{ old('details') }}</textarea>
+        </div>
 
-       <div>
-            <div class="mb-3 w-50">
-                <label>Project Details</label>
-                <textarea name="details" class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="mb-3 w-50">
-                <label>Project Type</label>
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Select Project Type
-                    </button>
-                    <ul class="dropdown-menu p-3" style="min-width: 100%;">
+        <div class="mb-3 w-50">
+            <label>Project Type</label>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Project Type
+                </button>
+                <ul class="dropdown-menu p-3" style="min-width: 100%;">
                     @php
-                            $selectedTypes = old('project_type', []);
-                            $options = ['Website', 'Mobile App', 'Desktop Application', 'Other'];
-                        @endphp
-
-                        @foreach($options as $option)
-                            <li>
-                                <div class="form-check">
-                                    <input
-                                        type="checkbox"
-                                        name="project_type[]"
-                                        value="{{ $option }}"
-                                        class="form-check-input"
-                                        id="type_{{ $loop->index }}"
-                                        {{ in_array($option, $selectedTypes ?? []) ? 'checked' : '' }}
-                                    >
-                                    <label class="form-check-label" for="type_{{ $loop->index }}">{{ $option }}</label>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+                        $selectedTypes = old('project_type', []);
+                        $options = ['Website', 'Mobile App', 'Desktop Application', 'Other'];
+                    @endphp
+                    @foreach($options as $option)
+                        <li>
+                            <div class="form-check">
+                                <input type="checkbox" name="project_type[]" value="{{ $option }}" class="form-check-input"
+                                    id="type_{{ $loop->index }}"
+                                    {{ in_array($option, $selectedTypes ?? []) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="type_{{ $loop->index }}">{{ $option }}</label>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
+        </div>
 
-           
-
-
-       </div>
-
-       <div class="d-flex gap-2 ">
-
+        <div class="d-flex gap-2 flex-wrap">
             <div class="mb-3 w-25">
                 <label>Upload Proposal (PDF/DOC/DOCX)</label>
                 <input type="file" name="proposal[]" class="form-control" accept=".pdf,.doc,.docx" multiple>
             </div>
 
-
             <div class="mb-3 w-25">
                 <label>Project Budget (BDT)</label>
-                <input type="number" name="budget" class="form-control" step="0.01">
+                <input type="number" name="budget" class="form-control">
             </div>
-
 
             <div class="mb-3 w-25">
                 <label>Status</label>
                 <select name="status" class="form-select">
-                    <option value="processing">Processing</option>
-                    <option value="pipeline">Pipeline</option>
-                    <option value="confrom">Confrom</option>
-                    <option value="cancel">Cancel</option>
+                    @php
+                        $statuses = ['processing', 'pipeline', 'confrom', 'cancel'];
+                    @endphp
+                    @foreach ($statuses as $status)
+                        <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
+                            {{ ucfirst($status) }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
-
-       </div>
-
-        
-
-       
-
-        
+        </div>
 
         <div class="mb-3 w-50">
             <label>Remark</label>
             <textarea name="remark" class="form-control" rows="3">{{ old('remark', $project->remark ?? '') }}</textarea>
         </div>
-
 
         <button type="submit" class="btn btn-primary">Submit</button>
         <a href="{{ route('projects.index') }}" class="btn btn-secondary">Back to List</a>

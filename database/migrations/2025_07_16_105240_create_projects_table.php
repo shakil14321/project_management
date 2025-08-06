@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('client');
             $table->string('number');
             $table->string('email');
-            $table->string('Client_requirements')->nullable();
+            $table->text('client_requirement_text')->nullable();
+            $table->string('client_requirement_file')->nullable();
             $table->string('company_address')->nullable();
             $table->text('details')->nullable();
             $table->json('project_type')->nullable();
