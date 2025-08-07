@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js" integrity="sha512-F636MAkMAhtTplahL9F6KmTfxTmYcAcjcCkyu0f0voT3N/6vzAuJ4Num55a0gEJ+hRLHhdz3vDvZpf6kqgEa5w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/css/bootstrap-toggle.css" integrity="sha512-9tISBnhZjiw7MV4a1gbemtB9tmPcoJ7ahj8QWIc0daBCdvlKjEA48oLlo6zALYm3037tPYYulT0YQyJIJJoyMQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <div class="container mt-4">
 
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -147,30 +152,51 @@
                             <td>{{ $project->remark ?? 'N/A' }}</td>
                             <td>
                                 {{ $project->reminder_date ?? 'No Reminder' }}
-                                    @php
-                                        $reminder = $reminders->firstWhere('project_id', $project->id);
-                                    @endphp
 
-                                    @if ($reminder)
-                                        <span title="{{ $reminder->text }}">
-                                            {{ $reminder->reminder_date }}
-                                        </span>
+                                <input data-id="{{ $project->id }}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ $project->reminder_date ? 'checked' : '' }}>
+                                @php
+                                    $reminder = $reminders->firstWhere('project_id', $project->id);
+                                @endphp
 
-                                        <form method="POST" action="{{ route('reminders.toggle', $reminder->id) }}" style="display: inline;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm {{ $reminder->is_active ? 'btn-success' : 'btn-secondary' }}">
-                                                {{ $reminder->is_active ? 'ON' : 'OFF' }}
-                                            </button>
-                                        </form>
-                                    @else
-                                        <span class="text-muted">No Reminder</span>
-                                    @endif
+                                @if ($reminder)
+                                    <input data-id="{{ $reminder->id }}" class="toggle-class" type="checkbox"
+                                        {{ $reminder->status ? 'checked' : '' }}
+                                        data-toggle="toggle" data-on="Active" data-off="Inactive">
+                                @else
+                                    <span class="text-muted">No Reminder</span>
+                                @endif
                             </td>
 
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+            <script>
+                $(function () {
+                    $('.toggle-class').change(function () {
+                        var status = $(this).prop('checked') ? 1 : 0;
+                        var reminderId = $(this).data('id');
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/reminders/" + reminderId + "/toggle",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                status: status
+                            },
+                            success: function (data) {
+                                console.log(data);
+                            },
+                            error: function (xhr) {
+                                alert('Error toggling reminder status.');
+                            }
+                        });
+                    });
+                });
+            </script>
+
         @else
             <p>No projects found.</p>
         @endif

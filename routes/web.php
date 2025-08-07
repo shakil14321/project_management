@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReminderController;
 
 
 
@@ -33,7 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/store', [ProjectController::class, 'store'])->name(name: 'form.submit');
     Route::get('/projects/{id}/profile', [ProjectController::class, 'show'])->name('projects.profile');
     Route::put('/projects/{id}/update', [ProjectController::class, 'update'])->name('projects.show');
-    Route::post('/reminders/{id}/toggle', [ProjectController::class, 'toggle'])->name('reminders.toggle');
-    Route::patch('/reminders/{id}/toggle', [App\Http\Controllers\ReminderController::class, 'toggle'])->name('reminders.toggle');
+    // Route::patch('/reminders/{id}/toggle', [ReminderController::class, 'toggle'])->name('reminders.toggle');
+    // Route::get('/reminders/{id}/toggle', [ReminderController::class, 'chaggeProjectStatus'])->name('reminders.toggle');
+    Route::post('/reminders/{id}/toggle', [ReminderController::class, 'toggleStatus'])->name('reminders.toggle');
+
 
 });

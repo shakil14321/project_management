@@ -139,6 +139,14 @@
 
 
         </div>
+
+        <div class="mb-3 w-50">
+            <label class="form-label">Reminder Text</label>
+            <input type="text" name="reminder_text" class="form-control" value="{{ old('reminder_text', $reminder->text ?? '') }}">
+
+            <label class="form-label mt-2">Reminder Link (optional)</label>
+            <input type="url" name="reminder_link" class="form-control" value="{{ old('reminder_link', $reminder->link ?? '') }}">
+        </div>
         
 
         <div class="mb-3 w-50">

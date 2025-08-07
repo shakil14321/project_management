@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reminder;
 use Illuminate\Http\Request;
+use App\Models\Project;
 
 class ReminderController extends Controller
 {
@@ -23,12 +24,13 @@ class ReminderController extends Controller
         return redirect()->back()->with('success', 'Reminder added!');
     }
 
-    public function toggle($id)
+    public function chaggeProjectStatus(Request $request, $id)
     {
+
         $reminder = Reminder::findOrFail($id);
-        $reminder->is_active = !$reminder->is_active;
+        $reminder->status = $request->status; // expects '1' or '0'
         $reminder->save();
 
-        return redirect()->back();
+        return response()->json(['success' => true, 'status' => $reminder->status]);
     }
 }
